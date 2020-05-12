@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+     <ImageView
+         android:id="@+id/imagequangcao"
+         android:layout_width="match_parent"
+         android:layout_height="200dp"
+         android:scaleType="fitXY"/>
+
+        <RelativeLayout
+            android:id="@+id/relativeimagequangcao"
+            android:layout_alignBottom="@+id/imagequangcao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/Imageviewquangcao"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:padding="2dp"/>
+          <TextView
+              android:id="@+id/titlebaihat"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textSize="17sp"
+              android:text="Con mèo"
+              android:textColor="#E65A5A"
+              android:layout_alignTop="@+id/Imageviewquangcao"
+              android:layout_toRightOf="@id/Imageviewquangcao"
+              android:layout_marginTop="5dp"/>
+          <RelativeLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_toRightOf="@id/Imageviewquangcao"
+              android:layout_marginTop="7dp"
+              android:layout_below="@+id/titlebaihat">
+                <TextView
+                    android:id="@+id/textnoidung"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:textSize="14dp"
+                    android:text="Chào các bé"
+                    android:layout_marginRight="40dp"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>
+
