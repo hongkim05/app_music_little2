@@ -9,5 +9,5 @@ import retrofit2.http.GET;
 
 public interface DataService {
   @GET("server2.php")
-  Call<List<Quangcao>> GetDataQuangcao();
+  Call<List<Quangcao>> GetDataQuangCao();
 }

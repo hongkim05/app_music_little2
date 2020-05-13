@@ -3,9 +3,12 @@ package com.example.app_music_little.Fragment;
 import android.Manifest;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +23,7 @@ import com.example.app_music_little.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
@@ -27,56 +31,52 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class QuangcaoFragment extends Fragment {
-    View view;
+    private View view;
     ViewPager viewPager;
     CircleIndicator circleIndicator;
     QuangcaoAdapter quangcaoAdapter;
-    Handler handler;
-    Runnable runnable;
-    int currentItem;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_quangcao,container,false);
-        anhxa();
-        GetData();
+        view = inflater.inflate(R.layout.fragment_quangcao, container, false);
+        anhXa();
         return view;
     }
 
-    private void anhxa() {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        GetData();
+    }
+
+    private void anhXa() {
         viewPager = view.findViewById(R.id.viewPaper);
         circleIndicator = view.findViewById(R.id.indicatorQC);
+        //phải new adapter ở ngoài, khi lấy được danh sách chỉ cần update lại.
+        quangcaoAdapter = new QuangcaoAdapter(requireContext());
+        viewPager.setAdapter(quangcaoAdapter);
+        circleIndicator.setViewPager(viewPager);
     }
 
     private void GetData() {
         DataService dataservice = RetrofitServer.getService();
-        Call<List<Quangcao>> callback = dataservice.GetDataQuangcao();
+        Call<List<Quangcao>> callback = dataservice.GetDataQuangCao();
+        //noinspection NullableProblems
         callback.enqueue(new Callback<List<Quangcao>>() {
-
 
             @Override
             public void onResponse(Call<List<Quangcao>> call, Response<List<Quangcao>> response) {
-                ArrayList<Quangcao> banners = (ArrayList<Quangcao>) response.body();
-                quangcaoAdapter = new QuangcaoAdapter(getActivity(), banners);
-                viewPager.setAdapter(quangcaoAdapter);
-                circleIndicator.setViewPager(viewPager);
-                handler = new Handler();
-                runnable = new Runnable() {
-                    @Override
-                    public void run() {
-
-                        currentItem = viewPager.getCurrentItem();
-                        currentItem++;
-                        if (currentItem >= viewPager.getAdapter().getCount()) {
-                            currentItem = 0;
-                        }
-                        viewPager.setCurrentItem(currentItem, true);
-                        handler.postDelayed(runnable, 4500);
+                List<Quangcao> quangcaoList = response.body();
+                if (quangcaoList != null && quangcaoList.size() > 0) {
+                    for (int i = 0; i < quangcaoList.size(); i++) {
+                        LayoutInflater inflater = requireActivity().getLayoutInflater();
+                        RelativeLayout view = (RelativeLayout) inflater.inflate(R.layout.dong_quangcao, null);
+                        quangcaoAdapter.addView(view, i,quangcaoList.get(i));
                     }
-                };
-                handler.postDelayed(runnable, 4500);
-
+                    quangcaoAdapter.notifyDataSetChanged();
+                    circleIndicator.getDataSetObserver().onChanged();
+                }
             }
 
             @Override
@@ -84,7 +84,5 @@ public class QuangcaoFragment extends Fragment {
 
             }
         });
-
-
     }
 }
